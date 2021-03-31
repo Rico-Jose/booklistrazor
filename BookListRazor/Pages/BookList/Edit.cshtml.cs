@@ -20,9 +20,20 @@ namespace BookListRazor.Pages.BookList
         [BindProperty]
         public Book Book { get; set; }
 
-        public async Task OnGet(int? id)
+        public async Task OnGet(int id)
         {
             Book = await _db.Book.FindAsync(id);
+        }
+
+        public async Task<IActionResult> OnPost(Book book)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Book.Update(book);
+                await _db.SaveChangesAsync();
+                return RedirectToPage("Index");
+            }
+            return RedirectToPage(Book);
         }
     }
 }
